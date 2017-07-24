@@ -1,0 +1,8 @@
+PROJECT_NAME = "Chain Hash API For C Code"
+PROJECT_BRIEF = "An implementation of a Chained Hash Table in C, for use with C libraries."
+INPUT = README.md \
+      include/chain-hash.h
+USE_MD_FILE_AS_MAINPAGE = README.md
+DISABLE_INDEX = YES
+GENERATE_TREEVIEW = YES
+GENERATE_HTML = NO
