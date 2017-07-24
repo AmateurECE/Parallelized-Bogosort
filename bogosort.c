@@ -16,6 +16,7 @@
  ***/
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 #if defined(_OPENMP) && !defined(CONFIG_SERIAL_THREADS)
 #include <omp.h>
@@ -67,13 +68,12 @@ static int issorted(int *, int);
  *		    _OPENMP is undefined or source is compiled with 
  *		    CONFIG_SERIAL_THREADS option, this macro expands to nothing.
  ***/
-int bogosort(int * array)
+int bogosort(int * array, int size)
 {
   if (array == NULL)
     return 1;
 
   srand((unsigned)time(NULL));
-  int size = sizeof(*array) / sizeof(int);
 
 #ifdef CFG_MT
   omp_lock_t mutex[size % 10]; /* Probably no reason to have more than 10. */
@@ -85,8 +85,8 @@ int bogosort(int * array)
   while (!sorted) {
     pfor (socket, int i = 0; i < size; i++) {
 
-      int index;
-      do { index = rand() % size; } while (index != i);
+      int index = 0;
+      do { index = rand() % size; } while (index == i);
       int temp = array[i];
 
 #ifdef CFG_MT
@@ -107,6 +107,7 @@ int bogosort(int * array)
 	
 #pragma omp cancel for
 #else
+	sorted = 1;
 	break;
 #endif /* CFG_MT */
       }
@@ -119,6 +120,39 @@ int bogosort(int * array)
 
   return 0;
 }
+
+int normal(int * array, int size)
+{
+
+  if (array == NULL)
+    return 1;
+
+  srand((unsigned)time(NULL));
+
+  int sorted = issorted(array, size);
+  while (!sorted) {
+    for (int i = 0; i < 10; i++) {
+      int index = 0;
+      do { index = rand() % size; } while (index == i);
+      int temp = array[i];
+      array[i] = array[index];
+      array[index] = temp;
+
+      for(int i = 0; i < size; i++) {
+	printf("%d ", array[i]);
+      }
+      printf("\n");
+
+      if (issorted(array, size)) {
+	sorted = 1;
+	break;
+      }
+    }
+  }
+
+  return 0;
+}
+
 /*******************************************************************************
  * STATIC FUNCTIONS
  ***/

@@ -58,13 +58,14 @@ static int test_sorted()
 
   int test_arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-  if (!bogosort(test_arr))
-    return 1;
+  if (normal(test_arr, 10))
+    return 0;
 
   for (int i = 0; i < 10; i++)
     printf("%d ", test_arr[i]);
-  
-  return 0;
+  printf("\n");
+
+  return 1;
 }
 
 /*******************************************************************************
@@ -83,13 +84,14 @@ static int test_unsorted()
 
   int test_arr[] = {1, 0, 2, 3, 4, 5, 6, 7, 8, 9};
 
-  if (!bogosort(test_arr))
-    return 1;
+  if (normal(test_arr, 10))
+    return 0;
 
   for (int i = 0; i < 10; i++)
     printf("%d ", test_arr[i]);
+  printf("\n");
   
-  return 0;
+  return 1;
 }
 
 /******************************************************************************/

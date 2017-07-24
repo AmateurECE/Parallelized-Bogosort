@@ -37,8 +37,8 @@
  * \param array The array of integers to sort.
  * \return Anything at all, if you're lucky.
  */
-int bogosort(int * array);
-
+int bogosort(int * array, int size);
+int normal(int * array, int size);
 #endif /* __ET_BOGOSORT_H__ */
 
 /******************************************************************************/
