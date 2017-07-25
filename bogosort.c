@@ -65,50 +65,59 @@ int bogosort(int * array, int size)
 
   srand((unsigned)time(NULL));
 
-#ifdef CFG_MT
-  omp_lock_t mutex[size % 13 + 1]; /* A prime number + 1, just in case. */
-  for (int i = 0; i < size % 10; i++)
-    omp_init_lock(&mutex[i]);
-#endif
+/* #ifdef CFG_MT */
+/*   omp_lock_t mutex[size % 13 + 1]; /\* A prime number + 1, just in case. *\/ */
+/*   for (int i = 0; i < size % 10; i++) */
+/*     omp_init_lock(&mutex[i]); */
+/* #endif */
 
   int sorted = issorted(array, size);
   while (!sorted) {
 
 #ifdef CFG_MT
-#pragma omp parallel
+#pragma omp parallel shared(sorted)
 #pragma omp for reduction(+:sorted)
 #endif
-
     for (int i = 0; i < size; i++) {
 
 #ifdef CFG_MT
-      omp_set_lock(&mutex[i]);
+      /* omp_set_lock(&mutex[i]); */
+#pragma omp cancellation point for
 #endif
 
       int index = 0;
       do { index = rand() % size; } while (index == i);
-      
-      int temp = array[i];
-      array[i] = array[index];
-      array[index] = temp;
-
-#ifdef CFG_MT
-      omp_unset_lock(&mutex[i]);
-#pragma omp cancellation point for
-#endif
-
-      if (issorted(array, size)) {
-
-#ifdef CFG_MT
 #pragma omp critical
-	sorted = 1;
+      {
+	int temp = array[i];
+	array[i] = array[index];
+	array[index] = temp;
+	/* } */
+	/* #ifdef CFG_MT */
+	/*       omp_unset_lock(&mutex[i]); */
+	/* #endif */
+
+	printf("Thread num %d says: ( ", omp_get_thread_num());
+	for (int j = 0; j < size; j++) {
+	  printf("%d ", array[j]);
+	}
+	printf(")\n");
+
+	if (issorted(array, size)) {
+
+#ifdef CFG_MT
+#pragma omp critical (junk)
+	  sorted = 1;
 	  
-#pragma omp cancel for
+/* #pragma omp cancel for */
 #else
-	sorted = 1;
-	break;
+	  sorted = 1;
+	  break;
 #endif
+	}
       }
+#pragma omp cancel for
+#pragma omp cancellation point for
     }
   }
 

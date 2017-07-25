@@ -61,7 +61,7 @@ static int test_sorted()
   if (bogosort(test_arr, (sizeof(test_arr) / sizeof(int))))
     return 0;
 
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < (sizeof(test_arr) / sizeof(int)); i++)
     printf("%d ", test_arr[i]);
   printf("\n");
 
@@ -82,12 +82,12 @@ static int test_sorted()
 static int test_unsorted()
 {
 
-  int test_arr[] = {1, 0, 2, 3, 4, 5, 6, 7, 8, 9};
+  int test_arr[] = {1, 0, 2};
 
   if (bogosort(test_arr, (sizeof(test_arr) / sizeof(int))))
     return 0;
 
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < (sizeof(test_arr) / sizeof(int)); i++)
     printf("%d ", test_arr[i]);
   printf("\n");
   
