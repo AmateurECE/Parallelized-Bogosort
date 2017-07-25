@@ -10,7 +10,8 @@
 # LAST EDITED:	    07/21/2017
 ###
 
-CFLAGS = -g -Wall -O0 -D CONFIG_SERIAL_THREADS
+CFLAGS = -g -Wall -O0 -fopenmp
+LDLIBS = -fopenmp
 CC = gcc
 
 bogosort_test: bogosort.c

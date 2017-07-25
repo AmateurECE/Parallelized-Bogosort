@@ -58,7 +58,7 @@ static int test_sorted()
 
   int test_arr[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-  if (normal(test_arr, 10))
+  if (bogosort(test_arr, (sizeof(test_arr) / sizeof(int))))
     return 0;
 
   for (int i = 0; i < 10; i++)
@@ -84,7 +84,7 @@ static int test_unsorted()
 
   int test_arr[] = {1, 0, 2, 3, 4, 5, 6, 7, 8, 9};
 
-  if (normal(test_arr, 10))
+  if (bogosort(test_arr, (sizeof(test_arr) / sizeof(int))))
     return 0;
 
   for (int i = 0; i < 10; i++)
