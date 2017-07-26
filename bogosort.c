@@ -65,12 +65,6 @@ int bogosort(int * array, int size)
 
   srand((unsigned)time(NULL));
 
-  /* #ifdef CFG_MT */
-  /*   omp_lock_t mutex[size % 13 + 1]; /\* A prime number + 1, just in case. *\/ */
-  /*   for (int i = 0; i < size % 10; i++) */
-  /*     omp_init_lock(&mutex[i]); */
-  /* #endif */
-
   int * sorted = malloc(sizeof(int));
   *sorted = issorted(array, size);
   while (!(*sorted)) {
@@ -82,10 +76,10 @@ int bogosort(int * array, int size)
     for (int i = 0; i < size; i++) {
 
 #ifdef CFG_MT
-      /* omp_set_lock(&mutex[i]); */
 #pragma omp cancellation point for
 #endif
 
+      /* For debugging purposes only. */
       /* printf("Thread num %d says: ( ", omp_get_thread_num()); */
       /* for (int j = 0; j < size; j++) { */
       /* 	printf("%d ", array[j]); */
@@ -101,18 +95,12 @@ int bogosort(int * array, int size)
 	  array[i] = array[index];
 	  array[index] = temp;
 	}
-	/* } */
-	/* #ifdef CFG_MT */
-	/*       omp_unset_lock(&mutex[i]); */
-	/* #endif */
 
 	if (issorted(array, size)) {
 
 #ifdef CFG_MT
 #pragma omp critical (junk)
 	  *sorted = 1;
-	  
-/* #pragma omp cancel for */
 #else
 	  *sorted = 1;
 	  break;
@@ -126,33 +114,6 @@ int bogosort(int * array, int size)
 
   return 0;
 }
-
-/* int normal(int * array, int size) */
-/* { */
-
-/*   if (array == NULL) */
-/*     return 1; */
-
-/*   srand((unsigned)time(NULL)); */
-
-/*   int sorted = issorted(array, size); */
-/*   while (!sorted) { */
-/*     for (int i = 0; i < 10; i++) { */
-/*       int index = 0; */
-/*       do { index = rand() % size; } while (index == i); */
-/*       int temp = array[i]; */
-/*       array[i] = array[index]; */
-/*       array[index] = temp; */
-
-/*       if (issorted(array, size)) { */
-/* 	sorted = 1; */
-/* 	break; */
-/*       } */
-/*     } */
-/*   } */
-
-/*   return 0; */
-/* } */
 
 /*******************************************************************************
  * STATIC FUNCTIONS
