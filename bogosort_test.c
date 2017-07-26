@@ -82,7 +82,7 @@ static int test_sorted()
 static int test_unsorted()
 {
 
-  int test_arr[] = {1, 0, 2};
+  int test_arr[] = {1, 0, 2, 3, 4, 5, 6, 7, 8, 9};
 
   if (bogosort(test_arr, (sizeof(test_arr) / sizeof(int))))
     return 0;
