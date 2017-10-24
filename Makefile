@@ -20,13 +20,17 @@ SRCS += bogosort_test.c
 
 OBJS=$(patsubst %.c,%.o,$(SRCS))
 
-.PHONY: force clean
+.PHONY: force clean serial serial_test all
 
-bogosort_test: force $(OBJS) clean
+all: bogosort_test clean
+
+bogosort_test: force $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) \
 		-o bogosort_test $(LDLIBS)
 
-serial: force $(OBJS) clean
+serial: serial_test clean
+
+serial_test: force $(OBJS)
 	$(CC) $(CFLAGS) -DCONFIG_SERIAL_THREADS $(OBJS) \
 		-o bogosort_test $(LDLIBS)
 
